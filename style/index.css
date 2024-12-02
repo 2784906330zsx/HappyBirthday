@@ -1,0 +1,150 @@
+/* 字体 */
+@font-face {
+    font-family: "SourceHanSansSC-Medium-2";
+    font-weight: 1 999;
+    src: url("../font/SourceHanSansSC-Medium-2.otf");
+}
+
+@font-face {
+    font-family: "Microsoft Yahei UI";
+    font-weight: 1 999;
+    src: url("../font/Microsoft Yahei UI.ttf");
+}
+
+/* 主体 */
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* 背景 */
+.background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to bottom left, #273F70, #181d4b); /* 渐变背景 */
+}
+
+/* 信息板 */
+.info {
+    position: absolute;
+    width: 1200px;
+    height: 675px;
+    border-radius: 8px;
+    box-shadow: 0 8px 8px 8px rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+}
+
+.info .logo {
+    position: absolute;
+    margin-left: 32px;
+    margin-top: 8px;
+    font-family: "Microsoft Yahei UI", bold;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: white;
+    z-index: 1000;
+}
+
+.info .button {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    margin-top: 616px;
+    margin-left: 32px;
+    z-index: 1000;
+}
+
+.info img {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border-radius: 8px;
+}
+
+.info .left-box {
+    position: relative;
+    float: left;
+    width: 600px;
+    height: 100%;
+    top: calc(-100% - 4px);
+    background-image: linear-gradient(to top right, rgba(200, 104, 107, 0.9), rgba(142, 145, 197, 0.5));
+    border-radius: 8px 0 0 8px;
+}
+
+.info .right-box {
+    position: relative;
+    float: left;
+    width: 50%;
+    height: 100%;
+    top: calc(-100% - 4px);
+    background-color: rgb(100, 100, 100);
+    border-radius: 0 8px 8px 0;
+    opacity: 0.4;
+}
+
+.info .time {
+    position: relative;
+    float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    top: calc(-200% - 4px);
+}
+
+.info .time .title {
+    font-family: "SourceHanSansSC-Medium-2";
+    color: white;
+    letter-spacing: 2px;
+    font-size: 24px;
+}
+
+.info .time .time-box {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 1000px;
+    height: 300px;
+    margin-bottom: 48px;
+}
+
+.info .time .time-box div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 20%;
+    height: 80%;
+}
+
+.info .time .time-box div p {
+    font-family: "Microsoft Yahei UI", bold;
+    color: white;
+    font-size: 128px;
+    margin: 0;
+}
+
+.info .time .time-box div span {
+    color: rgb(228, 228, 228);
+    font-size: 32px;
+    letter-spacing: 8px;
+    opacity: 0.6;
+}
+
+.info .time .sub-title {
+    font-family: "Microsoft Yahei UI";
+    color: white;
+    font-size: 20px;
+    letter-spacing: 4px;
+    margin: 0;
+}
+
+.info .time .sub-title.tips {
+    margin: 16px;
+}

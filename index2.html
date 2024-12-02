@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Happy Birthday To 张静文</title>
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png" />
+    <link rel="stylesheet" href="style/index2.css" />
+  </head>
+
+  <body>
+    <canvas class="canvas" width="1820" height="905"></canvas>
+    <script language="javascript">
+      fetch('date.json')
+        .then((response) => response.json())
+        .then((data) => {
+          const endDate = `${data.year}-${data.month}-${data.day} ${data.hour}:${data.minute}:${data.second}`;
+          if (new Date(endDate) - new Date() > 10000) {
+            window.location.href = './index.html';
+          } else if (new Date(endDate) - new Date() <= 0) {
+            window.location.href = './index3.html';
+          }
+        });
+    </script>
+    <script src="script/index2.js"></script>
+  </body>
+</html>
