@@ -1,7 +1,6 @@
 # HappyBirthday
 
-专属程序员的浪漫生日祝福，适合程序员或者计算机专业的学生给情侣、夫妻、暗恋的TA送上一份印象深刻的生日礼物
-演示网站：https://zjw-birthday.zsxfun.fun
+专属程序员的浪漫生日祝福，适合程序员或者计算机专业的学生给情侣、夫妻、暗恋的TA送上一份印象深刻的生日礼物。演示网站：https://zjw-birthday.zsxfun.fun
 
 ### 重要声明
 
