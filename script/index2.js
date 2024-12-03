@@ -3,7 +3,7 @@ var S = {
     S.Drawing.init('.canvas');
     document.body.classList.add('body--ready');
     S.UI.simulate(
-      '#countdown 9|Hey！！！|久等了！！！|But|很抱歉|什么都没有|你白等了！！！|GoodBye！|再见！|HaHa|开个玩笑|OK，Now！|真的要来了！！|#countdown 5|#toIndex3'
+      '#countdown 9|Hey，久等了|Today|Only Belongs To|YOU !|#toIndex3'
     );
     S.Drawing.loop(function () {
       S.Shape.render();
