@@ -4,12 +4,12 @@
 
 ### 重要声明
 
-此项目是基于以下若干开源项目整合并二次开发的，本人感谢并致敬原作者，尊重版权意识和开源精神，因此将用到的所有原链接列出（排名不分先后）
+此项目是基于以下若干开源项目整合开发的，本人感谢并致敬原作者，尊重版权意识和开源精神，因此将用到的所有原链接列出（排名不分先后）
 * https://github.com/faahim/happy-birthday (原创)
 * https://github.com/abandon888/HappyBirthday (二创，本人相当于三创)
+* https://www.bilibili.com/video/BV1Tb411d7ru (炫彩背景+目标倒计时)
 * https://github.com/Junrui-L/Happy-birthDay (读秒倒计时)
 * https://github.com/fox493/-button-css- (流光按钮)
-* https://www.bilibili.com/video/BV1Tb411d7ru (炫彩背景+目标倒计时)
 
 
 ### 本项目的改进点（主要对比abandon888的版本）
