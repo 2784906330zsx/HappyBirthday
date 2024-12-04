@@ -1,0 +1,392 @@
+html {
+    box-sizing: border-box;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+body {
+    margin: 0;
+    font-family: 'Work Sans', sans-serif;
+}
+
+.container {
+    height: 100vh;
+    width: 100vh;
+    margin: 0 auto;
+    text-align: center;
+    visibility: hidden;
+    position: relative;
+    overflow: hidden;
+}
+
+.container div.six {
+    top: 10vh;
+    z-index: 1;
+}
+
+.container div.seven,
+.container div.eight {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+}
+
+.container > div {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 20vh;
+}
+
+.one {
+    font-size: 4.5rem;
+}
+
+.one > img {
+    vertical-align: middle;
+    margin-bottom: 10px;
+    max-width: 100%;
+    height: auto;
+}
+
+.two {
+    font-size: 1.8rem;
+    font-weight: lighter;
+}
+
+.three {
+    font-size: 3rem;
+}
+
+.four .text-box {
+    width: 600px;
+    margin: 0 auto;
+    border: 3px solid #aaa;
+    border-radius: 5px;
+    padding: 10px;
+    position: relative;
+}
+
+.text-box p {
+    margin: 0;
+    text-align: left;
+}
+
+.text-box span {
+    visibility: hidden;
+}
+
+.text-box .fake-btn {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    color: #fff;
+    background-color: #2ba245;
+    padding: 5px 8px;
+    border-radius: 3px;
+}
+
+.five p {
+    font-size: 2rem;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.idea-3 strong {
+    padding: 3px 5px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.five .idea-5 {
+    font-size: 4rem;
+}
+
+.idea-5 span,
+.idea-6 span,
+.wish-hbd span {
+    display: inline-block;
+}
+
+.idea-6 span {
+    font-size: 15rem;
+}
+
+.six {
+    position: relative;
+}
+
+.six img {
+    display: inline-block;
+    max-width: 100%;
+    height: auto;
+}
+
+.six .hat {
+    position: absolute;
+    width: 80px;
+    top: -70px;
+    left: 49%;
+    transform: scale(1.1);
+}
+
+.baloons img {
+    display: inline-block;
+    position: absolute;
+}
+
+.baloons img:nth-child(even) {
+    left: -10%;
+}
+
+.baloons img:nth-child(odd) {
+    right: -10%;
+}
+
+.baloons img:nth-child(3n + 0) {
+    left: 30%;
+}
+
+.eight svg {
+    width: 25px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+    z-index: -1;
+}
+
+.eight svg:nth-child(1) {
+    top: 7vh;
+    left: 5vw;
+    fill: #bd6ecf;
+}
+
+.eight svg:nth-child(2) {
+    top: 23vh;
+    left: 35vw;
+    fill: #7dd175;
+}
+
+.eight svg:nth-child(3) {
+    top: 33vh;
+    left: 23vw;
+    fill: #349d8b;
+}
+
+.eight svg:nth-child(4) {
+    top: 43vh;
+    left: 57vw;
+    fill: #347a9d;
+}
+
+.eight svg:nth-child(5) {
+    top: 68vh;
+    left: 7vw;
+    fill: #c66053;
+}
+
+.eight svg:nth-child(6) {
+    top: 42vh;
+    left: 77vw;
+    fill: #bfaa40;
+}
+
+.eight svg:nth-child(7) {
+    top: 68vh;
+    left: 83vw;
+    fill: #e3bae8;
+}
+
+.eight svg:nth-child(8) {
+    top: 86vh;
+    left: 37vw;
+    fill: #8762cb;
+}
+
+.eight svg:nth-child(9) {
+    top: 94vh;
+    left: 87vw;
+    fill: #9a90da;
+}
+
+.wish-hbd {
+    font-size: 3em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.wish h5 {
+    font-weight: lighter;
+    font-size: 2rem;
+    margin: 10px 0 0;
+}
+
+.nine p {
+    font-size: 2rem;
+    font-weight: lighter;
+}
+
+#replay {
+    position: relative;
+    z-index: 3;
+    /* text-decoration: underline; */
+    cursor: pointer;
+}
+
+/* Media Queries */
+@media screen and (max-height: 1000px) {
+    .six .hat {
+        left: 49%;
+    }
+}
+
+@media screen and (max-height: 800px) {
+    .six .hat {
+        left: 46%;
+    }
+}
+
+@media screen and (max-height: 700px) {
+    .six .hat {
+        left: 44%;
+    }
+}
+
+@media screen and (max-height: 850px) and (max-width: 450px) {
+    .six .hat {
+        left: 42%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .container {
+        width: 90%;
+    }
+
+    .four .text-box {
+        width: 90%;
+    }
+
+    .text-box .fake-btn {
+        right: 5px;
+        bottom: -38px;
+    }
+
+    .idea-5 span {
+        display: block;
+    }
+
+    .idea-6 span {
+        font-size: 10rem;
+    }
+
+    .six .hat {
+        width: 50px;
+        top: -20px;
+    }
+
+    .wish-hbd {
+        font-size: 2.2em;
+    }
+
+    .wish h5 {
+        font-size: 1.4rem;
+    }
+
+    .nine p {
+        font-size: 1.5rem;
+        font-weight: lighter;
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.startSign {
+    /* 居中 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 20vh 5vw;
+}
+
+.startSign .button {
+    padding: 1rem 1.6rem;
+    border: 1px solid #2ba245;
+    border-radius: 5px;
+}
+
+.startSign .button:hover {
+    background-color: #2ba245;
+    color: #fff;
+    padding: 1rem 1.6rem;
+    cursor: pointer;
+}
+
+#replay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+    color: #fff;
+    font-size: 24px;
+    text-transform: uppercase; /* 强制大写 */
+    text-decoration: none;
+    font-family: sans-serif;
+    box-sizing: border-box;
+    background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+    background-size: 400%;
+    border-radius: 30px;
+    z-index: 1;
+    margin-top: 120px;
+}
+
+#replay:hover {
+    animation: animate 8s linear infinite;
+}
+
+@keyframes animate {
+    0% {
+        background-position: 0%;
+    }
+    100% {
+        background-position: 400%;
+    }
+}
+
+#replay:before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    z-index: -1;
+    background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+    background-size: 400%;
+    border-radius: 40px;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+#replay:hover:before {
+    filter: blur(20px); /*模糊效果*/
+    opacity: 1;
+    animation: animate 8s linear infinite;
+}
