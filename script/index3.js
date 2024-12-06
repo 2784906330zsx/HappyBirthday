@@ -1,5 +1,15 @@
 let audio = null;
 
+document.addEventListener('DOMContentLoaded', () => {
+    audio = new Audio('music/bgMusic.mp3');
+    audio.preload = 'auto';
+    audio.play();
+
+    setTimeout(() => {
+        animationTimeline();
+    }, 500);
+});
+
 // 获取日期数据
 fetch('config.json')
     .then((response) => response.json())
@@ -7,16 +17,6 @@ fetch('config.json')
         if (new Date(data.date) - new Date() > 20000) {
             window.location.href = './index.html';
         }
-        // 在文档加载时预加载音频
-        document.addEventListener('DOMContentLoaded', () => {
-            audio = new Audio('music/bgMusic.mp3');
-            audio.preload = 'auto';
-            audio.play();
-
-            setTimeout(() => {
-                animationTimeline();
-            }, 500);
-        });
     });
 
 // Import the data to config and insert them into page
