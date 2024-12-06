@@ -1,5 +1,22 @@
 let audio = null;
 
+// 全局缓存配置数据
+let cachedConfig = null;
+
+// 加载配置文件的函数
+const loadConfig = () => {
+    if (cachedConfig) {
+        return Promise.resolve(cachedConfig);
+    }
+    return fetch('config.json')
+        .then((response) => response.json())
+        .then((data) => {
+            cachedConfig = data;
+            return data;
+        });
+};
+
+// DOMContentLoaded 事件处理
 document.addEventListener('DOMContentLoaded', () => {
     audio = new Audio('music/bgMusic.mp3');
     audio.preload = 'auto';
@@ -10,40 +27,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500);
 });
 
-// 获取日期数据
-fetch('config.json')
-    .then((response) => response.json())
-    .then((data) => {
-        if (new Date(data.date) - new Date() > 20000) {
-            window.location.href = './index.html';
-        }
-    });
+// 检查日期并跳转
+loadConfig().then((data) => {
+    if (new Date(data.date) - new Date() > 20000) {
+        window.location.href = './index.html';
+    }
+});
 
-// Import the data to config and insert them into page
+// 将数据插入页面
 const fetchData = () => {
-    fetch('config.json')
-        .then((data) => data.json())
-        .then((data) => {
-            dataArr = Object.keys(data);
-            dataArr.map((customData) => {
-                if (data[customData] !== '') {
-                    if (customData === 'imagePath') {
-                        document
-                            .querySelector(`[data-node-name*="${customData}"]`)
-                            .setAttribute('src', data[customData]);
-                    } else if (!['expressUrl', 'date'].includes(customData)) {
-                        document.querySelector(
-                            `[data-node-name*="${customData}"]`
-                        ).innerText = data[customData];
-                    }
+    loadConfig().then((data) => {
+        Object.keys(data).forEach((key) => {
+            if (data[key] !== '') {
+                if (key === 'imagePath') {
+                    document
+                        .querySelector(`[data-node-name*="${key}"]`)
+                        .setAttribute('src', data[key]);
+                } else if (!['expressUrl', 'date'].includes(key)) {
+                    document.querySelector(
+                        `[data-node-name*="${key}"]`
+                    ).innerText = data[key];
                 }
-            });
+            }
         });
+    });
 };
 
-// Animation Timeline
+// 动画时间轴
 const animationTimeline = () => {
-    // Spit chars that needs to be animated individually
     const textBoxChars = document.getElementsByClassName('hbd-chatbox')[0];
     const hbd = document.getElementsByClassName('wish-hbd')[0];
 
@@ -103,7 +114,6 @@ const animationTimeline = () => {
         .from('.three', 0.7, {
             opacity: 0,
             y: 10,
-            // scale: 0.7
         })
         .to(
             '.three',
@@ -248,7 +258,6 @@ const animationTimeline = () => {
             {
                 opacity: 0,
                 y: -50,
-                // scale: 0.3,
                 rotation: 150,
                 skewX: '30deg',
                 ease: Elastic.easeOut.config(1, 0.5),
@@ -308,20 +317,19 @@ const animationTimeline = () => {
             '+=1'
         );
 
-    // 获取 config.json 中的 express URL
-    fetch('config.json')
-        .then((response) => response.json())
+    // 添加按钮事件
+    loadConfig()
         .then((config) => {
-            const expressUrl = config.expressUrl; // 获取express字段的URL
+            const expressUrl = config.expressUrl; // 获取 expressUrl
             const replyBtn = document.getElementById('replay');
             replyBtn.addEventListener('click', () => {
                 window.open(expressUrl);
             });
         })
         .catch((error) => {
-            console.error('从config.json读取expressUrl时出错:', error);
+            console.error('读取配置时发生错误:', error);
         });
 };
 
-// Run fetch and animation in sequence
+// 执行 fetch 和动画初始化
 fetchData();
