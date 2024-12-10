@@ -8,7 +8,7 @@
 
 - <https://github.com/faahim/happy-birthday> (原创)
 - <https://github.com/abandon888/HappyBirthday> (二创，本人相当于三创)
-- <https://www.bilibili.com/video/BV1Tb411d7ru> (炫彩背景+目标倒计时)
+- <https://gitee.com/baobao_JK/CountDown-2023> (炫彩背景+目标倒计时)
 - <https://github.com/Junrui-L/Happy-birthDay> (读秒倒计时)
 - <https://github.com/fox493/-button-css-> (流光按钮)
 
