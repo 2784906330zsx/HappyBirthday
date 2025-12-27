@@ -1,9 +1,9 @@
 {
   "demoMode": true,
   "name": "XXX",
-  "birthdayTime": "2026-12-28 04:49:00",
+  "birthdayTime": "2030-12-28 00:00:00",
   "userImagePath": "img/selfphoto.png",
-  "ifHaveGift": false,
+  "ifHaveGift": true,
   "giftImagePath": "img/gift.png",
   "homepageText1": "This website is developed by XXX for XXX specifically.",
   "homepageText2": "And it aims to celebrate XXX's 22th birthday.",
