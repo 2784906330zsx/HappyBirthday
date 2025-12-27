@@ -390,3 +390,135 @@ body {
     opacity: 1;
     animation: animate 8s linear infinite;
 }
+
+/* 图片查看器样式 */
+.image-viewer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.image-viewer.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.viewer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+}
+
+.viewer-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+}
+
+.image-viewer.active .viewer-content {
+    transform: scale(1);
+}
+
+.close-btn {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    color: #fff;
+    font-size: 36px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1001;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.close-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+#viewer-image {
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
+}
+
+#viewer-image:hover {
+    transform: scale(1.02);
+}
+
+.viewer-caption {
+    margin-top: 20px;
+    color: #fff;
+    font-size: 1.2rem;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px 20px;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+}
+
+/* 响应式设计 */
+@media screen and (max-width: 768px) {
+    .viewer-content {
+        max-width: 95%;
+    }
+    
+    .close-btn {
+        top: -30px;
+        right: 10px;
+        font-size: 28px;
+        width: 35px;
+        height: 35px;
+    }
+    
+    .viewer-caption {
+        font-size: 1rem;
+        padding: 8px 15px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .viewer-content {
+        max-width: 98%;
+    }
+    
+    .close-btn {
+        top: -25px;
+        right: 5px;
+        font-size: 24px;
+        width: 30px;
+        height: 30px;
+    }
+    
+    .viewer-caption {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+    }
+}

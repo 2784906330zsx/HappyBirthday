@@ -1,11 +1,173 @@
-fetch('config.json')
-    .then((response) => response.json())
-    .then((data) => {
-        if (new Date(data.date) - new Date() > 10000) {
-            window.location.href = './index.html';
-        } else if (new Date(data.date) - new Date() <= 0) {
-            window.location.href = './index3.html';
+const DEMO_STORAGE_KEY = 'birthdayConfig';
+const REDIRECT_FLAG_KEY = 'hb_recent_redirect_target';
+let cachedConfig = null;
+let configPromise = null;
+
+function parseDateString(dateStr) {
+    if (!dateStr) {
+        return null;
+    }
+    const parsed = new Date(dateStr);
+    return isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function isBirthdayExpired(dateStr) {
+    const parsed = parseDateString(dateStr);
+    if (!parsed) {
+        return true;
+    }
+    return parsed.getTime() <= Date.now();
+}
+
+function deepClone(obj) {
+    return JSON.parse(JSON.stringify(obj || {}));
+}
+
+function buildEditableSnapshot(data) {
+    return {
+        name: data.name || '',
+        birthdayTime: data.birthdayTime || '',
+        ifHaveGift: data.ifHaveGift !== undefined ? !!data.ifHaveGift : true,
+        homepageText1: data.homepageText1 || '',
+        homepageText2: data.homepageText2 || '',
+        blessText: deepClone(data.blessText || {})
+    };
+}
+
+function mergeDemoConfig(baseData) {
+    const mergedData = deepClone(baseData);
+    const storedRaw = localStorage.getItem(DEMO_STORAGE_KEY);
+    let localData = null;
+
+    if (storedRaw) {
+        try {
+            localData = JSON.parse(storedRaw);
+        } catch (e) {
+            console.error('解析localStorage配置失败:', e);
+            localStorage.removeItem(DEMO_STORAGE_KEY);
         }
+    }
+
+    if (localData) {
+        if (isBirthdayExpired(localData.birthdayTime)) {
+            localData.birthdayTime = baseData.birthdayTime;
+            localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(localData));
+        }
+    } else {
+        localData = buildEditableSnapshot(baseData);
+        localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(localData));
+    }
+
+    if (localData) {
+        if (localData.name !== undefined) {
+            mergedData.name = localData.name;
+        }
+        if (localData.birthdayTime !== undefined) {
+            mergedData.birthdayTime = localData.birthdayTime;
+        }
+        if (localData.ifHaveGift !== undefined) {
+            mergedData.ifHaveGift = !!localData.ifHaveGift;
+        }
+        if (localData.homepageText1 !== undefined) {
+            mergedData.homepageText1 = localData.homepageText1;
+        }
+        if (localData.homepageText2 !== undefined) {
+            mergedData.homepageText2 = localData.homepageText2;
+        }
+        if (localData.blessText) {
+            mergedData.blessText = Object.assign({}, mergedData.blessText || {}, localData.blessText);
+        }
+    }
+
+    return mergedData;
+}
+
+function markRedirectTarget(target) {
+    try {
+        sessionStorage.setItem(REDIRECT_FLAG_KEY, target);
+    } catch (e) {
+        console.warn('无法记录页面跳转状态:', e);
+    }
+}
+
+function consumeRedirectFlag(expected) {
+    try {
+        const flag = sessionStorage.getItem(REDIRECT_FLAG_KEY);
+        if (flag === expected) {
+            sessionStorage.removeItem(REDIRECT_FLAG_KEY);
+            return true;
+        }
+    } catch (e) {
+        console.warn('无法读取页面跳转状态:', e);
+    }
+    return false;
+}
+
+function loadConfig() {
+    if (cachedConfig) {
+        return Promise.resolve(cachedConfig);
+    }
+    if (configPromise) {
+        return configPromise;
+    }
+
+    configPromise = fetch('config.json', { cache: 'no-store' })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('无法读取config.json');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (data.demoMode === true) {
+                data = mergeDemoConfig(data);
+            } else {
+                localStorage.removeItem(DEMO_STORAGE_KEY);
+            }
+            cachedConfig = data;
+            return data;
+        })
+        .catch((error) => {
+            console.error('读取config.json时出错:', error);
+            throw error;
+        })
+        .finally(() => {
+            configPromise = null;
+        });
+
+    return configPromise;
+}
+
+function enforceRouteForIndex2(time) {
+    if (consumeRedirectFlag('index2')) {
+        return;
+    }
+    const targetDate = parseDateString(time);
+    if (!targetDate) {
+        console.warn('生日时间无效，无法校验页面路由');
+        return;
+    }
+    const diff = targetDate.getTime() - Date.now();
+    if (diff > 10000) {
+        markRedirectTarget('index');
+        window.location.href = './index.html';
+    } else if (diff <= 0) {
+        markRedirectTarget('index3');
+        window.location.href = './index3.html';
+    }
+}
+
+function processConfig(data) {
+    if (data.blessText && data.blessText.websiteTitle) {
+        document.getElementById('website-title').textContent = data.blessText.websiteTitle;
+    }
+    enforceRouteForIndex2(data.birthdayTime);
+}
+
+loadConfig()
+    .then(processConfig)
+    .catch(() => {
+        // 已在loadConfig中记录日志
     });
 
 var S = {
@@ -54,7 +216,7 @@ S.Drawing = (function () {
             context.clearRect(0, 0, canvas.width, canvas.height);
         },
         getArea: function () {
-            return {w: canvas.width, h: canvas.height};
+            return { w: canvas.width, h: canvas.height };
         },
         drawCircle: function (p, c) {
             context.fillStyle = c.render();
@@ -174,6 +336,7 @@ S.UI = (function () {
                         }
                         break;
                     case 'toIndex3':
+                        markRedirectTarget('index3');
                         window.location.href = './index3.html';
                         break;
                     default:
@@ -356,7 +519,7 @@ S.ShapeBuilder = (function () {
                 p += gap * 4 * shapeCanvas.width;
             }
         }
-        return {dots: dots, w: w + fx, h: h + fy};
+        return { dots: dots, w: w + fx, h: h + fy };
     }
 
     function setFontSize(s) {
@@ -413,7 +576,7 @@ S.ShapeBuilder = (function () {
                     );
                 }
             }
-            return {dots: dots, w: width, h: height};
+            return { dots: dots, w: width, h: height };
         },
     };
 })();

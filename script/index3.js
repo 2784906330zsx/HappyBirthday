@@ -1,20 +1,278 @@
+const DEMO_STORAGE_KEY = 'birthdayConfig';
+const REDIRECT_FLAG_KEY = 'hb_recent_redirect_target';
 let audio = null;
-
-// 全局缓存配置数据
 let cachedConfig = null;
+let configPromise = null;
 
-// 加载配置文件的函数
-const loadConfig = () => {
+function parseDateString(dateStr) {
+    if (!dateStr) {
+        return null;
+    }
+    const parsed = new Date(dateStr);
+    return isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function isBirthdayExpired(dateStr) {
+    const parsed = parseDateString(dateStr);
+    if (!parsed) {
+        return true;
+    }
+    return parsed.getTime() <= Date.now();
+}
+
+function deepClone(obj) {
+    return JSON.parse(JSON.stringify(obj || {}));
+}
+
+function buildEditableSnapshot(data) {
+    return {
+        name: data.name || '',
+        birthdayTime: data.birthdayTime || '',
+        ifHaveGift: data.ifHaveGift !== undefined ? !!data.ifHaveGift : true,
+        homepageText1: data.homepageText1 || '',
+        homepageText2: data.homepageText2 || '',
+        blessText: deepClone(data.blessText || {})
+    };
+}
+
+function mergeDemoConfig(baseData) {
+    const mergedData = deepClone(baseData);
+    const storedRaw = localStorage.getItem(DEMO_STORAGE_KEY);
+    let localData = null;
+
+    if (storedRaw) {
+        try {
+            localData = JSON.parse(storedRaw);
+        } catch (e) {
+            console.error('解析localStorage配置失败:', e);
+            localStorage.removeItem(DEMO_STORAGE_KEY);
+        }
+    }
+
+    if (localData) {
+        if (isBirthdayExpired(localData.birthdayTime)) {
+            localData.birthdayTime = baseData.birthdayTime;
+            localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(localData));
+        }
+    } else {
+        localData = buildEditableSnapshot(baseData);
+        localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(localData));
+    }
+
+    if (localData) {
+        if (localData.name !== undefined) {
+            mergedData.name = localData.name;
+        }
+        if (localData.birthdayTime !== undefined) {
+            mergedData.birthdayTime = localData.birthdayTime;
+        }
+        if (localData.ifHaveGift !== undefined) {
+            mergedData.ifHaveGift = !!localData.ifHaveGift;
+        }
+        if (localData.homepageText1 !== undefined) {
+            mergedData.homepageText1 = localData.homepageText1;
+        }
+        if (localData.homepageText2 !== undefined) {
+            mergedData.homepageText2 = localData.homepageText2;
+        }
+        if (localData.blessText) {
+            mergedData.blessText = Object.assign({}, mergedData.blessText || {}, localData.blessText);
+        }
+    }
+
+    return mergedData;
+}
+
+function markRedirectTarget(target) {
+    try {
+        sessionStorage.setItem(REDIRECT_FLAG_KEY, target);
+    } catch (e) {
+        console.warn('无法记录页面跳转状态:', e);
+    }
+}
+
+function consumeRedirectFlag(expected) {
+    try {
+        const flag = sessionStorage.getItem(REDIRECT_FLAG_KEY);
+        if (flag === expected) {
+            sessionStorage.removeItem(REDIRECT_FLAG_KEY);
+            return true;
+        }
+    } catch (e) {
+        console.warn('无法读取页面跳转状态:', e);
+    }
+    return false;
+}
+
+function loadConfig() {
     if (cachedConfig) {
         return Promise.resolve(cachedConfig);
     }
-    return fetch('config.json')
-        .then((response) => response.json())
+    if (configPromise) {
+        return configPromise;
+    }
+
+    configPromise = fetch('config.json', { cache: 'no-store' })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('无法读取config.json');
+            }
+            return response.json();
+        })
         .then((data) => {
+            if (data.demoMode === true) {
+                data = mergeDemoConfig(data);
+            } else {
+                localStorage.removeItem(DEMO_STORAGE_KEY);
+            }
             cachedConfig = data;
             return data;
+        })
+        .catch((error) => {
+            console.error('读取config.json时出错:', error);
+            throw error;
+        })
+        .finally(() => {
+            configPromise = null;
         });
-};
+
+    return configPromise;
+}
+
+function enforceRouteForIndex3(time) {
+    if (consumeRedirectFlag('index3')) {
+        return;
+    }
+    const targetDate = parseDateString(time);
+    if (!targetDate) {
+        console.warn('生日时间无效，无法校验页面路由');
+        return;
+    }
+    const diff = targetDate.getTime() - Date.now();
+    if (diff > 0) {
+        if (diff > 10000) {
+            markRedirectTarget('index');
+            window.location.href = './index.html';
+        } else {
+            markRedirectTarget('index2');
+            window.location.href = './index2.html';
+        }
+    }
+}
+
+function applyConfigToPage(data) {
+    if (!data) {
+        return;
+    }
+
+    // 处理基本信息
+    if (data.name) {
+        const nameElements = document.querySelectorAll('[data-node-name="name"]');
+        nameElements.forEach((el) => {
+            if (el) el.innerText = data.name;
+        });
+    }
+
+    // 处理用户图片
+    if (data.userImagePath) {
+        const imgElement = document.querySelector('[data-node-name="imagePath"]');
+        if (imgElement) {
+            imgElement.setAttribute('src', data.userImagePath);
+        }
+    }
+
+    // 处理祝福文本
+    if (data.blessText) {
+        const blessText = data.blessText;
+
+        if (blessText.websiteTitle) {
+            const titleElement = document.getElementById('website-title');
+            if (titleElement) {
+                titleElement.textContent = blessText.websiteTitle;
+            }
+        }
+
+        const fieldMapping = {
+            text1: 'text1',
+            text2: 'text2',
+            text3: 'text3',
+            text4: 'text4',
+            text5: 'text5',
+            text6: 'text6',
+            text7: 'text7',
+            text8: 'text8',
+            text9: 'text9',
+            text10: 'text10',
+            wishHead: 'wishHead',
+            wishText: 'wishText',
+            giftText: 'giftText',
+            giftButtonText: 'giftButtonText'
+        };
+
+        Object.keys(fieldMapping).forEach((configField) => {
+            const pageField = fieldMapping[configField];
+            const element = document.querySelector(`[data-node-name="${pageField}"]`);
+            if (element && blessText[configField]) {
+                element.innerText = blessText[configField];
+            }
+        });
+    }
+
+    setupGiftSection(data);
+}
+
+function setupGiftSection(data) {
+    const giftSection = document.querySelector('.nine');
+    const imageViewer = document.getElementById('image-viewer');
+    const viewerImage = document.getElementById('viewer-image');
+    const overlay = document.querySelector('.viewer-overlay');
+    const closeBtn = document.querySelector('.close-btn');
+    const replyBtn = document.getElementById('replay');
+
+    function closeImageViewer() {
+        if (imageViewer) {
+            imageViewer.classList.remove('active');
+        }
+        document.body.style.overflow = '';
+    }
+
+    if (!data.ifHaveGift) {
+        if (giftSection) {
+            giftSection.style.display = 'none';
+        }
+        closeImageViewer();
+        return;
+    }
+
+    if (giftSection) {
+        giftSection.style.display = '';
+    }
+
+    if (replyBtn) {
+        replyBtn.onclick = function () {
+            if (data.giftImagePath && imageViewer && viewerImage) {
+                viewerImage.src = data.giftImagePath;
+                imageViewer.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } else if (data.githubUrl) {
+                window.open(data.githubUrl, '_blank');
+            }
+        };
+    }
+
+    if (overlay) {
+        overlay.onclick = closeImageViewer;
+    }
+    if (closeBtn) {
+        closeBtn.onclick = closeImageViewer;
+    }
+
+    document.addEventListener('keydown', function handleKeyDown(e) {
+        if (e.key === 'Escape' && imageViewer && imageViewer.classList.contains('active')) {
+            closeImageViewer();
+        }
+    });
+}
 
 // DOMContentLoaded 事件处理
 document.addEventListener('DOMContentLoaded', () => {
@@ -22,36 +280,18 @@ document.addEventListener('DOMContentLoaded', () => {
     audio.preload = 'auto';
     audio.play();
 
-    setTimeout(() => {
-        animationTimeline();
-    }, 500);
-});
-
-// 检查日期并跳转
-loadConfig().then((data) => {
-    if (new Date(data.date) - new Date() > 20000) {
-        window.location.href = './index.html';
-    }
-});
-
-// 将数据插入页面
-const fetchData = () => {
-    loadConfig().then((data) => {
-        Object.keys(data).forEach((key) => {
-            if (data[key] !== '') {
-                if (key === 'imagePath') {
-                    document
-                        .querySelector(`[data-node-name*="${key}"]`)
-                        .setAttribute('src', data[key]);
-                } else if (!['expressUrl', 'date'].includes(key)) {
-                    document.querySelector(
-                        `[data-node-name*="${key}"]`
-                    ).innerText = data[key];
-                }
-            }
+    loadConfig()
+        .then((data) => {
+            enforceRouteForIndex3(data.birthdayTime);
+            applyConfigToPage(data);
+            setTimeout(() => {
+                animationTimeline();
+            }, 500);
+        })
+        .catch((error) => {
+            console.error('初始化index3页面失败:', error);
         });
-    });
-};
+});
 
 // 动画时间轴
 const animationTimeline = () => {
@@ -316,20 +556,4 @@ const animationTimeline = () => {
             },
             '+=1'
         );
-
-    // 添加按钮事件
-    loadConfig()
-        .then((config) => {
-            const expressUrl = config.expressUrl; // 获取 expressUrl
-            const replyBtn = document.getElementById('replay');
-            replyBtn.addEventListener('click', () => {
-                window.open(expressUrl);
-            });
-        })
-        .catch((error) => {
-            console.error('读取配置时发生错误:', error);
-        });
-};
-
-// 执行 fetch 和动画初始化
-fetchData();
+}

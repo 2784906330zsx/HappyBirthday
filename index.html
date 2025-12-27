@@ -1,46 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Happy Birthday To 张静文</title>
-    <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
+    <title id="website-title">Happy Birthday</title>
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png" />
     <link rel="stylesheet" href="style/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
-<div class="background">
-    <div class="info">
-        <img src="img/background.jpg" alt="background.jpg">
-        <div class="left-box"></div>
-        <div class="right-box"></div>
-        <div class="time">
-            <h2 class="title">距离 张静文 小姐的生日还有</h2>
-            <div class="time-box">
-                <div class="days">
-                    <p class="day">00</p>
-                    <span class="text">days</span>
+    <div class="background">
+        <div class="info">
+            <img src="img/background.jpg" alt="background.jpg">
+            <div class="left-box"></div>
+            <div class="right-box"></div>
+            <div class="time">
+                <h2 class="title">距离 <span id="countdown-name" class="countdown-name"></span> 的生日还有</h2>
+                <div class="time-box">
+                    <div class="days">
+                        <p class="day">00</p>
+                        <span class="text">days</span>
+                    </div>
+                    <div class="hours">
+                        <p class="hour">00</p>
+                        <span class="text">hours</span>
+                    </div>
+                    <div class="min">
+                        <p class="min">00</p>
+                        <span class="text">min</span>
+                    </div>
+                    <div class="sec">
+                        <p class="sec">00</p>
+                        <span class="text">sec</span>
+                    </div>
                 </div>
-                <div class="hours">
-                    <p class="hour">00</p>
-                    <span class="text">hours</span>
-                </div>
-                <div class="min">
-                    <p class="min">00</p>
-                    <span class="text">min</span>
-                </div>
-                <div class="sec">
-                    <p class="sec">00</p>
-                    <span class="text">sec</span>
-                </div>
+                <p class="sub-title" id="homepage-text1"></p>
+                <p class="sub-title" id="homepage-text2"></p>
+                <p class="sub-title tips"></p>
             </div>
-            <p class="sub-title">𝑇ℎ𝑖𝑠 𝑤𝑒𝑏𝑠𝑖𝑡𝑒 𝑖𝑠 𝑑𝑒𝑣𝑒𝑙𝑜𝑝𝑒𝑑 𝑏𝑦 𝑍𝑆𝑋 𝑠𝑝𝑒𝑐𝑖𝑓𝑖𝑐𝑎𝑙𝑙𝑦 𝑓𝑜𝑟 𝑀𝑖𝑠𝑠 𝑍𝐽𝑊.</p>
-            <p class="sub-title">𝐴𝑛𝑑 𝑖𝑡 𝑎𝑖𝑚𝑠 𝑡𝑜 𝑐𝑒𝑙𝑒𝑏𝑟𝑎𝑡𝑒 𝑎𝑛𝑑 𝑐𝑜𝑚𝑚𝑒𝑚𝑜𝑟𝑎𝑡𝑒 ℎ𝑒𝑟 21𝑠𝑡 𝑏𝑖𝑟𝑡ℎ𝑑𝑎𝑦.</p>
-            <p class="sub-title tips"></p>
+        </div>
+
+        <div id="demo-mode-container" class="demo-mode-container"
+            style="display: none; position: fixed; top: 20px; right: 20px; z-index: 1000; background-color: rgba(0, 0, 0, 0.5); padding: 8px 15px; border-radius: 20px;">
+            <div class="demo-mode-text" style="color: #ffffff; font-size: 14px; margin-right: 15px; font-weight: bold;">
+                当前为演示模式</div>
+            <div class="demo-icons" style="display: flex; align-items: center;">
+                <a id="github-icon" href="#" target="_blank" title="GitHub"
+                    style="color: #ffffff; font-size: 18px; margin-right: 10px;">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a id="settings-icon" href="#" title="设置" style="color: #ffffff; font-size: 18px;">
+                    <i class="fas fa-cog"></i>
+                </a>
+            </div>
         </div>
     </div>
-</div>
 </body>
 
-<script src="script/jquery-3.2.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="script/index.js"></script>
+
 </html>
